@@ -6,7 +6,7 @@ dotenv.config();
 const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY });
 
 
-async function main(){
+export async function main(prompt){
      const messages=[
           {
             role: "system",
@@ -22,7 +22,7 @@ async function main(){
           },
           {
             role: "user",
-            content: "when was iphone 17 launched?."
+            content: prompt
           }
         ];
   try {
@@ -69,7 +69,6 @@ async function main(){
 
     const result = await response.json();
 
-    // Correct: inspect the choice/message for tool calls
     const choice = result?.choices?.[0];
     const message = choice?.message ?? {};
 
@@ -78,7 +77,7 @@ async function main(){
     const toolCalls = message.tool_calls;
     if(!toolCalls){
         console.log("Final response from model:\n", message.content);
-        break;
+        return message.content;
     }
     for(const tools of toolCalls){
         const funName=tools.function.name;
@@ -103,11 +102,10 @@ async function main(){
     }
 }
 
-main();
 
 
 async function webSearch({query}){
--    console.log("Performing web search for query");
+    console.log("Performing web search for query");
     const response = await tvly.search(query);
     const finalResult=response.results.map(result=>result.content).join("\n");
     return finalResult;
