@@ -57,15 +57,14 @@ export default function ChatGPTUI() {
         body: JSON.stringify({ prompt: trimmed }),
         });
         const botText = await res.json();
-        setBotMs(botText.reply);
-        console.log(botMs);
+        console.log(botText.reply);
         // -----------------------------------------
 
 
 
       // create bot message and insert just BELOW the associated user message.
       // We will insert bot message right after the newest user message so it visually appears below it.
-      const botMsg = { id: nextId(), role: "bot", text: botMs, parentId: userMsg.id };
+      const botMsg = { id: nextId(), role: "bot", text: botText.reply, parentId: userMsg.id };
 
       // Insert bot message right after the user message (index 0 => bot at index 1)
       setMessages(prev => {
@@ -92,16 +91,7 @@ export default function ChatGPTUI() {
     }
   }
 
-//   Example backend function you should replace with your real call
-//   async function sendToBackend(prompt) {
-//     const res = await fetch('/api/chat', {
-//       method: 'POST',
-//       headers: { 'Content-Type': 'application/json' },
-//       body: JSON.stringify({ prompt }),
-//     });
-//     const data = await res.json();
-//     return data.reply; // adapt to your response shape
-//   }
+
 
   // convenience: send message on Enter (Shift+Enter for newline)
   function handleKeyDown(e) {
@@ -127,7 +117,7 @@ export default function ChatGPTUI() {
           <div className="flex justify-start ml-6">
             <div className="max-w-[85%] rounded-xl bg-gray-100 text-gray-900 px-4 py-2 border">
               <div className="text-xs font-semibold text-gray-600">Bot</div>
-              <div className="mt-1 whitespace-pre-wrap">{botMs}</div>
+              <div className="mt-1 whitespace-pre-wrap">{msg.text}</div>
             </div>
           </div>
         )}
