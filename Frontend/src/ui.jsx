@@ -1,22 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 
-// ChatGPT-like UI in a single-file React component using Tailwind CSS
-// - Newest user questions are shown at the TOP
-// - Bot responses appear below each user question
-// - Replace `sendToBackend` with your actual API call to OpenAI / backend
+
+const sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
 
 export default function ChatGPTUI() {
-  // messages: array of { id, role: 'user'|'bot', text, parentId? }
-  // We'll store messages in chronological order but display newest user messages at top
-  const [messages, setMessages] = useState([
-    // example starting message (optional)
-    // { id: 1, role: 'bot', text: 'Hi — ask me anything!' }
-  ]);
+  
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef(null);
   const idCounter = useRef(1);
-  const [botMs, setBotMs] = useState("");
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -46,15 +39,12 @@ export default function ChatGPTUI() {
     setIsLoading(true);
 
     try {
-      // Replace this with your real API call. Example (commented) below:
-      // const botText = await sendToBackend(trimmed);
-
-      // --- For demo: fake bot reply after 800ms ---
-
+      
+      
       const res = await fetch("http://localhost:5000/api/chat", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: trimmed }),
+        body: JSON.stringify({ prompt: trimmed, sid: sid}),
         });
         const botText = await res.json();
         console.log(botText.reply);

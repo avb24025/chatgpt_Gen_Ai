@@ -1,13 +1,12 @@
 import dotenv from 'dotenv';
 import {tavily} from "@tavily/core";
+import NodeCache from 'node-cache';
 dotenv.config();
 
-
 const tvly = tavily({ apiKey: process.env.TAVILY_API_KEY });
-
-
-export async function main(prompt){
-     const messages=[
+const cache = new NodeCache( { stdTTL: 60*60*24} );
+export async function main(prompt,sid){
+     const basemessages=[
           {
             role: "system",
             content: `You are a smart assistant that can access real-time data by calling a tool named webSearch. 
@@ -20,12 +19,15 @@ export async function main(prompt){
             Do not call the tool multiple times unnecessarily. 
             If the answer can be given from your knowledge, respond directly without using webSearch`
           },
-          {
-            role: "user",
-            content: prompt
-          }
         ];
+
+      const messages=cache.get(sid) ?? basemessages;
+
+      messages.push({ role: "user", content: prompt });
+
   try {
+
+
     while(true){
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -77,6 +79,7 @@ export async function main(prompt){
     const toolCalls = message.tool_calls;
     if(!toolCalls){
         console.log("Final response from model:\n", message.content);
+        cache.set(sid,messages);
         return message.content;
     }
     for(const tools of toolCalls){

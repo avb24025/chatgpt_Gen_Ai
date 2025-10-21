@@ -12,12 +12,12 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/api/chat', async (req, res) => {
-    const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: "missing prompt" });
+    const { prompt, sid} = req.body;
+    if (!prompt && !sid) return res.status(400).json({ error: "missing prompt" });
 
     try {
         // Await the exported main() and return its result
-        const botResponse = await getBotResponse(prompt);
+        const botResponse = await getBotResponse(prompt,sid);
         res.json({ reply: botResponse });
     } catch (e) {
         res.status(500).json({ error: "failed to get bot response" });
