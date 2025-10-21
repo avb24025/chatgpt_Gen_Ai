@@ -2,43 +2,17 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { main as getBotResponse } from './model.js';
+import userRoutes from './controller.js';
 
 dotenv.config();
 const app=express();
 // Fix: use environment PORT if present, otherwise 5000
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
-app.use(cors({
-  origin: ["https://axfbbots.vercel.app"], // array of allowed frontend URLs
-  methods: ["GET", "POST", "OPTIONS"],
-  credentials: true
-}));
 
-app.post('/api/chat', async (req, res) => {
-    // Add CORS headers manually
-    res.setHeader("Access-Control-Allow-Origin", "https://axfbbots.vercel.app"); // frontend URL
-    res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+app.use(cors());
 
-    // Handle preflight OPTIONS request
-    if (req.method === "OPTIONS") {
-        return res.status(200).end();
-    }
-
-    const { prompt, sid } = req.body;
-    if (!prompt || !sid) return res.status(400).json({ error: "missing prompt or sid" });
-
-    try {
-        const botResponse = await getBotResponse(prompt, sid);
-        res.json({ reply: botResponse });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ error: "failed to get bot response" });
-    }
-});
-
-
-
+app.use('/api/chat',userRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
