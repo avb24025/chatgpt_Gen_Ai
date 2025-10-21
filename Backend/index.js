@@ -8,8 +8,11 @@ const app=express();
 // Fix: use environment PORT if present, otherwise 5000
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
-
-app.use(cors());
+app.use(cors({
+  origin: ["https://axfbbots.vercel.app"], // array of allowed frontend URLs
+  methods: ["GET", "POST", "OPTIONS"],
+  credentials: true
+}));
 
 app.post('/api/chat', async (req, res) => {
     // Add CORS headers manually
