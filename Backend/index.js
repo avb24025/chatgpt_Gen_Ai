@@ -12,20 +12,28 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/api/chat', async (req, res) => {
+    // Add CORS headers manually
     res.setHeader("Access-Control-Allow-Origin", "https://axfbbots.vercel.app"); // frontend URL
     res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    const { prompt, sid} = req.body;
-    if (!prompt && !sid) return res.status(400).json({ error: "missing prompt" });
+
+    // Handle preflight OPTIONS request
+    if (req.method === "OPTIONS") {
+        return res.status(200).end();
+    }
+
+    const { prompt, sid } = req.body;
+    if (!prompt || !sid) return res.status(400).json({ error: "missing prompt or sid" });
 
     try {
-        // Await the exported main() and return its result
-        const botResponse = await getBotResponse(prompt,sid);
+        const botResponse = await getBotResponse(prompt, sid);
         res.json({ reply: botResponse });
     } catch (e) {
+        console.error(e);
         res.status(500).json({ error: "failed to get bot response" });
     }
 });
+
 
 
 
