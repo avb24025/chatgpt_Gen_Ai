@@ -41,7 +41,7 @@ export default function ChatGPTUI() {
     try {
       
       
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: trimmed, sid: sid}),
@@ -119,7 +119,7 @@ export default function ChatGPTUI() {
     <div className="h-screen flex flex-col bg-gradient-to-b from-white to-gray-50">
       <header className="p-4 border-b">
         <h1 className="text-xl font-bold">GPT-lite</h1>
-        <p className="text-sm text-gray-500">Web Search Support.</p>
+        <p className="text-sm text-gray-500">Web Search Support and Chat Context support.</p>
       </header>
 
       {/* messages area */}
