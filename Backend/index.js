@@ -12,6 +12,9 @@ app.use(express.json());
 app.use(cors());
 
 app.post('/api/chat', async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "https://axfbbots.vercel.app"); // frontend URL
+    res.setHeader("Access-Control-Allow-Methods", "POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     const { prompt, sid} = req.body;
     if (!prompt && !sid) return res.status(400).json({ error: "missing prompt" });
 
