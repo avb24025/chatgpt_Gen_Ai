@@ -1,17 +1,24 @@
-.env
-node_modules
-package-lock.json
-package.json
-.DS_Store
-.vscode
+# Node
+node_modules/
 npm-debug.log
+package-lock.json
+
+# Environment files
+.env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env.test
-.env.production
 .env.development
---- IGNORE ---
-# Ignore API keys and sensitive files
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# IDE / System files
+.DS_Store
+.vscode/
+
+# Sensitive files
 API_KEY.txt
+
+# --- IGNORE ---
+# Ignore API keys and sensitive files

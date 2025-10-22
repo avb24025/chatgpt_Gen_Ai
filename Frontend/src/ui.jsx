@@ -41,14 +41,16 @@ export default function ChatGPTUI() {
     try {
       
       
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/chat`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: trimmed, sid: sid}),
-        });
-        const botText = await res.json();
-        console.log(botText.reply);
-        // -----------------------------------------
+      // e.g. VITE_BACKEND_URL = "https://chatgpt-gen-backend.vercel.app/" 
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: trimmed, sid }),
+      mode: 'cors' // optional; browser uses CORS automatically
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const botText = await res.json();
+
 
 
 
